@@ -112,20 +112,22 @@ class IMUDriverNode(Node):
             "51_0"
         )
 
-        self.declare_parameter('port', '/dev/imu_usb')
-        self.declare_parameter('baud', 9600)
+        self.declare_parameter('serial_port', '/dev/imu_usb')
+        self.declare_parameter('serial_baudrate', 9600)
+        self.declare_parameter('frame_id', 'base_link')
 
-        port_name = self.get_parameter('port').get_parameter_value().string_value
-        baud_rate = self.get_parameter('baud').get_parameter_value().integer_value
+        port_name = self.get_parameter('serial_port').get_parameter_value().string_value
+        baud_rate = self.get_parameter('serial_baudrate').get_parameter_value().integer_value
+        frame_id = self.get_parameter('frame_id').get_parameter_value().string_value
 
         self.tmp_msg = Temperature()
-        self.tmp_msg.header.frame_id = 'base_link'
+        self.tmp_msg.header.frame_id = frame_id
 
         self.imu_msg = Imu()
-        self.imu_msg.header.frame_id = 'base_link'
+        self.imu_msg.header.frame_id = frame_id
 
         self.mag_msg = MagneticField()
-        self.mag_msg.header.frame_id = 'base_link'
+        self.mag_msg.header.frame_id = frame_id
 
         self.tmp_pub = self.create_publisher(Temperature, 'imu/temp_raw', 10)
         self.imu_pub = self.create_publisher(Imu, 'imu/data_raw', 10)
